@@ -56,6 +56,8 @@ app.use((error, req, res, next) => {
     res.status(status).json({message: message, data: data})
 })
 
+
+// Database and server connection
 mongoose.connect('mongodb://localhost:27017/quizdb').then(response => {
     console.log("Connected to database");
     app.listen(8080)
