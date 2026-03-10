@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
+require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 
@@ -30,7 +31,7 @@ const fileFilter = (req, file, cb) => {
 }
 
 app.use(bodyParser.json());
-app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
+app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('picture'));
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');

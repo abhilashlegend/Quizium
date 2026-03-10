@@ -22,5 +22,16 @@ router.post('/signup', [
     })
  ], authController.signup);
 
+ router.post('/signin', [
+    body('email').isEmail().withMessage("Please enter valid email address").custom((value, {req}) => {
+        return User.findOne({email: value}).then(userdoc => {
+            if(!userDoc){
+                return Promise.reject("Account does not exists, please signup!");
+            }
+        })    
+    }).normalizeEmail(),
+    body('password').trim().notEmpty().withMessage("Please enter password")
+ ], authController.signin);
+
 
  module.exports = router;
