@@ -8,6 +8,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './routes/RootLayout.jsx';
 import Home, { action as signinAction } from './routes/Home.jsx';
 import Signup, { action as signupAction } from './routes/Signup.jsx';
+import { action as logoutAction } from './routes/Logout.js';
 import ErrorHandler from './components/ErrorHandler.jsx';
 import Dashboard from './routes/Dashboard.jsx';
 
@@ -15,7 +16,8 @@ const router = createBrowserRouter([
   { path: '/', element: <RootLayout />, errorElement: <ErrorHandler />, children: [
     { path: '/', element: <Home />, action: signinAction },
     { path: '/signup', element: <Signup />, action: signupAction },
-    { path: '/dashboard', element: <Dashboard /> }
+    { path: '/dashboard', element: <Dashboard /> },
+    { path: '/logout', action: logoutAction }
   ]}
 ])
 
