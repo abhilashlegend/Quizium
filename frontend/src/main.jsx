@@ -11,12 +11,13 @@ import Signup, { action as signupAction } from './routes/Signup.jsx';
 import { action as logoutAction } from './routes/Logout.js';
 import ErrorHandler from './components/ErrorHandler.jsx';
 import Dashboard from './routes/Dashboard.jsx';
+import { loader as TokenLoader, checkAuthLoader } from './util/auth.js';
 
 const router = createBrowserRouter([
-  { path: '/', element: <RootLayout />, errorElement: <ErrorHandler />, children: [
+  { path: '/', element: <RootLayout />, id: 'root', loader: TokenLoader, errorElement: <ErrorHandler />, children: [
     { path: '/', element: <Home />, action: signinAction },
     { path: '/signup', element: <Signup />, action: signupAction },
-    { path: '/dashboard', element: <Dashboard /> },
+    { path: '/dashboard', element: <Dashboard />, loader: checkAuthLoader },
     { path: '/logout', action: logoutAction }
   ]}
 ])
