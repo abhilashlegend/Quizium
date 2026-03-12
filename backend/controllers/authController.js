@@ -62,7 +62,7 @@ exports.signin = (req, res, next) => {
         }
         const token = jwt.sign({
             email: loadedUser.email,
-            role: user.role,
+            role: loadedUser.role,
             userId: loadedUser._id.toString()
         }, jwtkey, { expiresIn: '1h'});
 

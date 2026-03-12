@@ -71,6 +71,7 @@ export async function action({request}) {
   const token = resData.token;
 
   localStorage.setItem('token', token);
+  localStorage.setItem('userId', resData.userId);
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 1);
   localStorage.setItem('expiration', expiration.toISOString());

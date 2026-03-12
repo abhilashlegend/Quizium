@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
 
 // Error middleware
 app.use((error, req, res, next) => {
