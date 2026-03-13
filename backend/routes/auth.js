@@ -25,7 +25,7 @@ router.post('/signup', [
  router.post('/signin', [
     body('email').isEmail().withMessage("Please enter valid email address").custom((value, {req}) => {
         return User.findOne({email: value}).then(userdoc => {
-            if(!userDoc){
+            if(!userdoc){
                 return Promise.reject("Account does not exists, please signup!");
             }
         })    
