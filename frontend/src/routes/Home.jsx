@@ -5,6 +5,8 @@ export default function Home() {
     const navigate = useNavigation();
     const isSubmitting = navigate.state === 'submitting';
 
+    console.log(data?.data[0]);
+
     return (
        
             <div className="container py-5 h-100">
@@ -14,16 +16,18 @@ export default function Home() {
                     <div className="card-body p-5">
 
                         <h3 className="mb-5 text-center">Sign in</h3>
-
+                        { data && data.message && <div className='alert alert-danger'> {data.message}</div> }
                         <Form method="post">
                             <div data-mdb-input-init className="form-outline mb-4">
                                 <label className="form-label" htmlFor="email">Email</label>
-                                <input type="email" id="email" name="email" className="form-control form-control-lg" />
+                                <input type="email" id="email" name="email" className="form-control form-control-lg" required />
+                                { data && data.data && data.data.find(err => err.path === "email") ? <p className='error'>{data.data.find(err => err.path === "email").msg}</p> : null }
                             </div>
 
                             <div data-mdb-input-init className="form-outline mb-4">
                                 <label className="form-label" htmlFor="password">Password</label>
-                                <input type="password" id="password" name="password" className="form-control form-control-lg" />
+                                <input type="password" id="password" name="password" className="form-control form-control-lg" required />
+                                { data && data.data && data.data.find(err => err.path === "password") ? <p className='error'>{data.data.find(err => err.path === "password").msg}</p> : null }
                             </div>
 
                             <button  className="main-button me-2" type="submit" disabled={isSubmitting}>{ isSubmitting ? 'Logging in...' : 'Login' }</button>

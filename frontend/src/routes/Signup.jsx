@@ -24,7 +24,7 @@ export default function Signup() {
                             <div className="form-outline mb-4">
                                 <label className="form-label" htmlFor="firstname"><span aria-label='required'>* </span>First Name</label>
                                 <input type="text" id="firstname" name="firstName" className="form-control form-control-lg" required />
-                                { data && data.data[0]["path"] === "firstName" ? <p className='error'>{data.data[0]["msg"]}</p> : null }
+                                { data && data.data && data.data.find(err => err.path === "firstName") ? <p className='error'>{data.data.find(err => err.path === "firstName").msg}</p> : null }
                             </div>
 
                             <div className="form-outline mb-4">
@@ -40,19 +40,19 @@ export default function Signup() {
                             <div data-mdb-input-init className="form-outline mb-4">
                                 <label className="form-label" htmlFor="email"><span aria-label='required'>* </span> Email</label>
                                 <input type="email" id="email" name="email" className="form-control form-control-lg" required />
-                               { data && data.data[0]["path"] === "email" ? <p className='error'>{data.data[0]["msg"]}</p> : null }
+                               { data && data.data && data.data.find(err => err.path === "email") ? <p className='error'>{data.data.find(err => err.path === "email").msg}</p> : null }
                             </div>
 
                             <div data-mdb-input-init className="form-outline mb-4">
                                 <label className="form-label" htmlFor="password"><span aria-label='required'>* </span> Password</label>
                                 <input type="password" id="password" name="password" className="form-control form-control-lg" required />
-                                { data && data.data[0]["path"] === "password" ? <p className='error'>{data.data[0]["msg"]}</p> : null }
+                                { data && data.data && data.data.find(err => err.path === "password") ? <p className='error'>{data.data.find(err => err.path === "password").msg}</p> : null }
                             </div>
 
                             <div data-mdb-input-init className="form-outline mb-4">
                                 <label className="form-label" htmlFor="confirmPassword"><span aria-label='required'>* </span> Confirm Password</label>
                                 <input type="password" id="confirmPassword" name="confirmPassword" className="form-control form-control-lg" required />
-                                { data && data.data[0]["path"] === "confirmPassword" ? <p className='error'>{data.data[0]["msg"]}</p> : null }
+                                { data && data.data && data.data.find(err => err.path === "confirmPassword") ? <p className='error'>{data.data.find(err => err.path === "confirmPassword").msg}</p> : null }
                             </div>
 
                             <button  className="main-button me-2" type="submit" disabled={isSubmitting}>
