@@ -29,7 +29,7 @@ export default function Header() {
                     className="nav-menu ms-auto"
                     >
                     <NavDropdown.Item to="/profile" as={Link}>Profile</NavDropdown.Item>
-                    <NavDropdown.Item href="#settings">Settings</NavDropdown.Item>
+                    <NavDropdown.Item to="/settings" as={Link}>Settings</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <Form action="/logout" method='POST'>
                         <NavDropdown.Item role='button' as='button'>Logout</NavDropdown.Item>

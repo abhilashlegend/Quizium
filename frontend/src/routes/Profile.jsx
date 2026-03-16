@@ -1,6 +1,7 @@
 import { Form, useNavigate, redirect } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getAuthToken } from '../util/auth';
+import DefaultProfilePicture  from '../assets/307ce493-b254-4b2d-8ba4-d12c080d6651.jpg';
 
 export default function Profile(props) {
 
@@ -9,6 +10,7 @@ export default function Profile(props) {
      const userId = localStorage.getItem('userId');
 
      const navigate = useNavigate();
+     let profileImage = null;
 
      function handleCancel() {
         navigate('/dashboard');
@@ -24,12 +26,18 @@ export default function Profile(props) {
        }).then(result => {
         return result.json();
        }).then(data => {
-        console.log(data);
             setProfileData(data.user);
        }).catch(err => {
         console.log(err);
        })
-    }, [])
+    }, []);
+
+    if(profileData?.picture){
+        profileImage = `http://localhost:8080/${profileData?.picture}`;
+    } else {
+        profileImage = DefaultProfilePicture;
+    }
+    
     return (
         <div className="container px-4 py-5 cbg h-100">
             <h2 className="pb-2 border-bottom">Profile</h2>
@@ -37,7 +45,8 @@ export default function Profile(props) {
              <div className="row">
                  
                 <div className='col-md-4 col-lg-6'>
-                    <img src={`http://localhost:8080/${profileData?.picture}`} width="120" />
+                    
+                    <img src={profileImage} width="120" />
                      <div className="form-outline mb-4">
                         <label className="form-label" htmlFor="picture">Profile Picture</label> <br />
                         <input type="file" name="picture" id="picture"  />

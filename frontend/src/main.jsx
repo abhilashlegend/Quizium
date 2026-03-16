@@ -13,6 +13,7 @@ import ErrorHandler from './components/ErrorHandler.jsx';
 import Dashboard from './routes/Dashboard.jsx';
 import { loader as TokenLoader, checkAuthLoader } from './util/auth.js';
 import Profile, { action as profileUpdateAction } from './routes/Profile.jsx';
+import Settings from './routes/Settings.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <RootLayout />, id: 'root', loader: TokenLoader, errorElement: <ErrorHandler />, children: [
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     { path: '/signup', element: <Signup />, action: signupAction },
     { path: '/dashboard', element: <Dashboard />, loader: checkAuthLoader },
     { path: '/profile', element: <Profile />, loader: checkAuthLoader, action: profileUpdateAction },
+    { path: '/settings', element: <Settings /> },
     { path: '/logout', action: logoutAction }
   ]}
 ])
