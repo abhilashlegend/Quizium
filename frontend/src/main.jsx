@@ -12,14 +12,14 @@ import { action as logoutAction } from './routes/Logout.js';
 import ErrorHandler from './components/ErrorHandler.jsx';
 import Dashboard from './routes/Dashboard.jsx';
 import { loader as TokenLoader, checkAuthLoader } from './util/auth.js';
-import Profile from './routes/Profile.jsx';
+import Profile, { action as profileUpdateAction } from './routes/Profile.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <RootLayout />, id: 'root', loader: TokenLoader, errorElement: <ErrorHandler />, children: [
     { path: '/', element: <Home />, action: signinAction },
     { path: '/signup', element: <Signup />, action: signupAction },
     { path: '/dashboard', element: <Dashboard />, loader: checkAuthLoader },
-    { path: '/profile', element: <Profile />, loader: checkAuthLoader },
+    { path: '/profile', element: <Profile />, loader: checkAuthLoader, action: profileUpdateAction },
     { path: '/logout', action: logoutAction }
   ]}
 ])

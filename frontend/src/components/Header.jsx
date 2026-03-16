@@ -1,5 +1,5 @@
 import Logo  from '../assets/quiz-logo.png';
-import { Form, useRouteLoaderData } from 'react-router-dom';
+import { Form, useRouteLoaderData, Link } from 'react-router-dom';
 
 import { Navbar, Container, NavDropdown } from "react-bootstrap";
 
@@ -28,7 +28,7 @@ export default function Header() {
                     id="basic-nav-dropdown"
                     className="nav-menu ms-auto"
                     >
-                    <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                    <NavDropdown.Item to="/profile" as={Link}>Profile</NavDropdown.Item>
                     <NavDropdown.Item href="#settings">Settings</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <Form action="/logout" method='POST'>
