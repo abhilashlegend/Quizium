@@ -5,8 +5,6 @@ export default function Home() {
     const navigate = useNavigation();
     const isSubmitting = navigate.state === 'submitting';
 
-    console.log(data?.data[0]);
-
     return (
        
             <div className="container py-5 h-100">

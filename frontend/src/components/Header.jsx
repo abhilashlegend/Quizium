@@ -9,7 +9,7 @@ export default function Header() {
 
     return (
         <header className='pb-4'>
-            <Navbar  expand="lg" className="shadow-sm">
+            <Navbar  expand="lg">
                 <Container className="position-relative">
 
                     {/* Center Logo */}

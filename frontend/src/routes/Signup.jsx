@@ -5,11 +5,6 @@ export default function Signup() {
     const navigation = useNavigation();
     const isSubmitting = navigation.state === 'submitting';
 
-    if(data){
-         console.log(data.data[0]["msg"]);
-    }
-   
-
     return (
         <div className="container py-5 h-100">
             <div className="row d-flex justify-content-center align-items-center h-100">

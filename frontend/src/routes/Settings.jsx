@@ -1,4 +1,5 @@
-import { Form, useNavigate } from 'react-router-dom';
+import { Form, useNavigate, redirect } from 'react-router-dom';
+import { getAuthToken } from '../util/auth';
 
 export default function Settings(props) {
 
@@ -37,4 +38,32 @@ export default function Settings(props) {
              </Form>
         </div>
     )
+}
+
+export async function action({request}) {
+    const data = await request.formData();
+    const userId = data.get('userId');
+
+    const url = `http://localhost:8080/users/update-password/${userId}`;
+
+    const token = getAuthToken();
+
+    const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': 'bearer ' + token
+        },
+        body: data
+    })
+
+    if(response.status === 422 || response.status === 401){
+        return response;
+    }
+
+    if(!response.ok){
+        throw json({message: 'Could not update password'}, { status: 500 })
+    }
+
+    return redirect('/dashboard');    
+
 }

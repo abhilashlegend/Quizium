@@ -2,6 +2,7 @@ const User = require("../models/user");
 const fs = require('fs');
 const path = require('path');
 const { validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
 
 exports.getUserProfile = (req, res, next) => {
     const userId = req.params.id;
@@ -71,6 +72,47 @@ exports.updateUserProfile = (req, res, next) => {
         }
         next(err);
     })
+}
+
+exports.updatePassword = (req, res, next) => {
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        const error = new Error("Validation failed, entered data is incorrect");
+        error.statusCode = 422;
+        throw error;
+    }
+
+    const userId = req.params.id;
+    const password = req.body.password;
+
+    try {
+        User.findById(userId).then(user => {
+            if(!user){
+                const error = new Error("Could not find user");
+                error.statusCode = 404;
+                throw error;
+            }
+
+            bcrypt.hash(password, 12).then(hashedPwd => {
+                user.password = hashedPwd;
+                return user.save();
+            }).then(result => {
+                res.status(201).json({message: 'User password updated!', userId: result._id })
+            })
+        }).catch(err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        })
+    } catch(err) {
+        console.error(err);
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }    
 }
 
 const clearImage = filePath => {
