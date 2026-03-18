@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // Routes
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
 
 // Error middleware
 app.use((error, req, res, next) => {

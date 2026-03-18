@@ -115,6 +115,31 @@ exports.updatePassword = (req, res, next) => {
     }    
 }
 
+exports.getAllUsers = async (req, res, next) => {
+    const currentPage = req.query.page || 1;
+    const perPage = 10;
+    let totalItems;
+    try {
+        totalItems = await User.find().countDocuments();
+        const users = await User.find().skip((currentPage - 1) * perPage).limit(perPage);
+        if(!users){
+            const error = new Error('Could not get users');
+            error.statusCode = 422;
+            throw error;
+        } 
+        res.status(200).json({ 
+            message: 'Fetched users successfully',
+            users: users,
+            totalItems: totalItems
+        })
+    } catch(err) {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(error);
+    }
+}
+
 const clearImage = filePath => {
     filePath = path.join(__dirname, '..', filePath);
     fs.unlink(filePath, err => console.log(err));
