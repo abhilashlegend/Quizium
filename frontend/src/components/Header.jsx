@@ -1,20 +1,26 @@
 import Logo  from '../assets/quiz-logo.png';
 import { Form, useRouteLoaderData, Link } from 'react-router-dom';
-
-import { Navbar, Container, NavDropdown } from "react-bootstrap";
+import { getUserRole } from '../util/auth';
+import { Navbar, Container, NavDropdown, Nav } from "react-bootstrap";
 
 export default function Header() {
-
+    const role = getUserRole();
     const hasToken = useRouteLoaderData('root');
 
     return (
         <header className='pb-4'>
             <Navbar  expand="lg">
                 <Container className="position-relative">
+                    { role === "admin" && <Nav className="me-auto admin-menu">
+                        <Nav.Link to='/admin/users' as={Link}>Users</Nav.Link>
+                        <Nav.Link href="#features">Quizes</Nav.Link>
+                        <Nav.Link href="#pricing">Results</Nav.Link>
+                    </Nav> }
+                    
 
                     {/* Center Logo */}
                     <Navbar.Brand 
-                    href="/" 
+                    to={ hasToken ? '/dashboard' : '/' } as={Link}
                     className="position-absolute start-50 translate-middle-x"
                     >
                        

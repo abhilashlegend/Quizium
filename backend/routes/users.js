@@ -17,6 +17,6 @@ router.patch('/update-password/:id', [
         }
         return true;
     })
-], userController.updatePassword)
+], isAuth, userController.updatePassword)
 
 module.exports = router;

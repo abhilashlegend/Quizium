@@ -1,4 +1,5 @@
 import { redirect } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 export function getTokenDuration() {
     const storedExpirationDate = localStorage.getItem('expiration');
@@ -23,6 +24,21 @@ export function getAuthToken() {
 
     return token;
 }
+
+export function getUserRole() {
+    const token = localStorage.getItem("token");
+    if(!token) return null;
+
+    try {
+        const decoded = jwtDecode(token);
+        return decoded.role;
+    } catch(err) {
+        console.error("Invalid token", err);
+        return null;
+    }
+}
+
+
 
 export function loader() {
     return getAuthToken();
