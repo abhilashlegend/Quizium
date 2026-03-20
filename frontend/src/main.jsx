@@ -15,7 +15,8 @@ import { loader as TokenLoader, checkAuthLoader } from './util/auth.js';
 import Profile, { action as profileUpdateAction } from './routes/Profile.jsx';
 import Settings, { action as passwordUpdateAction } from './routes/Settings.jsx';
 import AdminRoute from './routes/admin/AdminRoute.jsx';
-import Users from './routes/admin/Users.jsx';
+import Users, { loader as userLoader } from './routes/admin/Users.jsx';
+import EditUser from './routes/admin/EditUser.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <RootLayout />, id: 'root', loader: TokenLoader, errorElement: <ErrorHandler />, children: [
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
     { path: '/signup', element: <Signup />, action: signupAction },
     { path: '/dashboard', element: <Dashboard />, loader: checkAuthLoader },
     { path: '/profile', element: <Profile />, loader: checkAuthLoader, action: profileUpdateAction },
-    { path: '/settings', element: <Settings />, action:  passwordUpdateAction },
+    { path: '/settings', element: <Settings />, loader: checkAuthLoader, action:  passwordUpdateAction },
     { path: '/logout', action: logoutAction },
 
     // Admin-only route
@@ -32,7 +33,15 @@ const router = createBrowserRouter([
       <AdminRoute>
         <Users />
       </AdminRoute>
-      ), loader: checkAuthLoader 
+      ), loader: userLoader,  
+    }, 
+    {
+      path: '/admin/edit-user/:id',
+      element : (
+        <AdminRoute>
+          <EditUser />
+        </AdminRoute>
+      )
     }
   ]}
 ])

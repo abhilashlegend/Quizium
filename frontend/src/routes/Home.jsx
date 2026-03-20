@@ -1,7 +1,8 @@
-import { Link, Form, redirect, useActionData, useNavigate, useNavigation } from 'react-router-dom';
+import { Link, Form, redirect, useActionData, useLoaderData, useNavigate, useNavigation } from 'react-router-dom';
 
 export default function Home() {
     const data = useActionData();
+    const loaderData = useLoaderData();
     const navigate = useNavigation();
     const isSubmitting = navigate.state === 'submitting';
 
@@ -14,6 +15,7 @@ export default function Home() {
                     <div className="card-body p-5">
 
                         <h3 className="mb-5 text-center">Sign in</h3>
+                        { loaderData && loaderData.message && <div className='alert alert-danger'> {loaderData.message}</div> }
                         { data && data.message && <div className='alert alert-danger'> {data.message}</div> }
                         <Form method="post">
                             <div data-mdb-input-init className="form-outline mb-4">
