@@ -68,13 +68,20 @@ exports.signin = (req, res, next) => {
             error.statusCode = 401;
             throw error;
         }
+
+        // Access Token (1 hour)
         const token = jwt.sign({
             email: loadedUser.email,
             role: loadedUser.role,
             userId: loadedUser._id.toString()
         }, jwtkey, { expiresIn: '1h'});
 
-        res.status(200).json({token: token, userId: loadedUser._id.toString() });
+        // refresh token ( 7 days )
+        const refreshToken = jwt.sign({
+            userId: loadedUser._id.toString()
+        }, jwtkey, { expiresIn: '7d' })
+
+        res.status(200).json({token: token, refreshToken: refreshToken, userId: loadedUser._id.toString() });
     }).catch(err => {
         if(!err.statusCode){
             err.statusCode = 500;
@@ -82,3 +89,36 @@ exports.signin = (req, res, next) => {
         next(err);
     })
 }
+
+exports.verifyRefreshToken = (req, res, next) => {
+    const refreshToken = req.body.refreshToken;
+    const jwtkey = process.env.JWT_SECRET;
+
+    if(!refreshToken){
+        const error = new Error("No refresh token");
+        error.statusCode = 401;
+        throw error;
+    }
+
+    try {
+        jwt.verify(refreshToken, jwtkey, (err, decoded) => {
+            if(err){
+                const err = new Error("Invalid refresh token");
+                err.statusCode = 403;
+                throw error;
+            }
+
+            const newAccessToken = jwt.sign({
+                userId: decoded.userId
+            }, jwtkey, { expiresIn: '1h' })
+        });
+
+        res.json({ accessToken: newAccessToken })
+
+    } catch(err) {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+ }

@@ -43,7 +43,13 @@ exports.getUser = async (req, res, next) => {
 
         res.status(200).json({
             message: 'Fetched user successfully',
-            user: user
+            user: {
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                picture: user.picture,
+                email: user.email,
+            }
         })
     } catch(err) {
         if(!err.statusCode){

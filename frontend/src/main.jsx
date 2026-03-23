@@ -15,8 +15,9 @@ import { loader as TokenLoader, checkAuthLoader } from './util/auth.js';
 import Profile, { action as profileUpdateAction } from './routes/Profile.jsx';
 import Settings, { action as passwordUpdateAction } from './routes/Settings.jsx';
 import AdminRoute from './routes/admin/AdminRoute.jsx';
-import Users, { loader as userLoader } from './routes/admin/Users.jsx';
-import EditUser from './routes/admin/EditUser.jsx';
+import Users, { loader as usersLoader } from './routes/admin/Users.jsx';
+import EditUser, { loader as userDetailLoader } from './routes/admin/EditUser.jsx';
+
 
 const router = createBrowserRouter([
   { path: '/', element: <RootLayout />, id: 'root', loader: TokenLoader, errorElement: <ErrorHandler />, children: [
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
       <AdminRoute>
         <Users />
       </AdminRoute>
-      ), loader: userLoader,  
+      ), loader: usersLoader,  
     }, 
     {
       path: '/admin/edit-user/:id',
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
         <AdminRoute>
           <EditUser />
         </AdminRoute>
-      )
+      ), loader: userDetailLoader,
     }
   ]}
 ])

@@ -1,7 +1,8 @@
 import { Outlet, useSubmit, useLoaderData } from "react-router-dom";
 import Header from "../components/Header";
 import ErrorHandler from "../components/ErrorHandler";
-import { getTokenDuration } from "../util/auth";
+import { getTokenDuration, startTokenRefresh } from "../util/auth";
+import { startAutoLogout } from "../util/autoLogout";
 import { useEffect } from 'react';
 
 export default function RootLayout() {
@@ -10,6 +11,12 @@ export default function RootLayout() {
     const token = useLoaderData();
 
     useEffect(() => {
+        startTokenRefresh();
+        startAutoLogout(submit)
+    }, [submit]);
+
+    useEffect(() => {
+
         if(!token){
             return;
         }
@@ -21,10 +28,11 @@ export default function RootLayout() {
 
         const tokenDuration = getTokenDuration();
 
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             submit(null, { method: 'POST', action: '/logout' })
-        }, tokenDuration)
+        }, tokenDuration);
 
+        return () => clearTimeout(timer);
         
     }, [submit, token])
 
@@ -37,3 +45,4 @@ export default function RootLayout() {
         </>
     )
 }
+

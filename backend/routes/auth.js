@@ -33,5 +33,8 @@ router.post('/signup', [
     body('password').trim().notEmpty().withMessage("Please enter password")
  ], authController.signin);
 
+ router.post('/refresh-token', authController.verifyRefreshToken )
+
+
 
  module.exports = router;

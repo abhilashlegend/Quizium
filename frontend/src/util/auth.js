@@ -1,5 +1,6 @@
 import { redirect } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { action as logoutUser } from '../routes/Logout';
 
 export function getTokenDuration() {
     const storedExpirationDate = localStorage.getItem('expiration');
@@ -52,4 +53,25 @@ export function checkAuthLoader() {
     }
 
     return null;
+}
+
+export function startTokenRefresh() {
+    setInterval( async () => {
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        if(!refreshToken) return;
+
+        const res = await fetch('http://localhost:8080/refresh-token', {
+            method: 'POST',
+            body: JSON.stringify({ refreshToken }),
+            headers: {'Content-Type':'application/json'}
+        });
+
+        if(res.ok){
+            const data = await res.json();
+            localStorage.setItem('token', data.accessToken);
+        } else {
+           logoutUser();
+        }
+    }, 10 * 60 * 1000); // every 10 mins
 }
