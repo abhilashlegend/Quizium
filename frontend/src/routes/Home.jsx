@@ -75,6 +75,7 @@ export async function action({request}) {
   const token = resData.token;
 
   localStorage.setItem('token', token);
+  localStorage.setItem('refreshToken', resData.refreshToken);
   localStorage.setItem('userId', resData.userId);
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 1);
@@ -82,4 +83,3 @@ export async function action({request}) {
   return redirect("/dashboard");
 
 }
-

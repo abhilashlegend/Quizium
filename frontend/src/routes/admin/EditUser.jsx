@@ -1,4 +1,4 @@
-import { Form, useNavigate, useLoaderData } from "react-router-dom";
+import { Form, useNavigate, useLoaderData, redirect } from "react-router-dom";
 import { getAuthToken } from "../../util/auth";
 import DefaultProfilePicture  from '../../assets/307ce493-b254-4b2d-8ba4-d12c080d6651.jpg';
 
@@ -8,8 +8,6 @@ export default function EditUser() {
     const user = useLoaderData();
     let profileImage = null;
 
-
-    console.log(user);
 
     function handleCancel() {
         navigate('/admin/users');
@@ -52,11 +50,11 @@ export default function EditUser() {
 
                         <div className="form-outline mb-4">
                             <label className="form-label" htmlFor="password"><span aria-label='required'>* </span>Password</label>
-                            <input type="password" id="password" name="password" className="form-control form-control-lg" required />
+                            <input type="password" id="password" name="password" className="form-control form-control-lg" />
                         </div>
 
                         <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="confirmPassword"><span aria-label='required'>* </span>Confirm Password</label>
+                            <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
                             <input type="password" id="confirmPassword" name="confirmPassword" className="form-control form-control-lg" />
                         </div>
 
@@ -85,7 +83,7 @@ export async function loader({request, params}) {
     });
 
     if(!response.ok){
-        throw JSON({
+        throw Response.json({
             message: 'Could not fetch user'
         }, {
             status: 500
@@ -94,5 +92,36 @@ export async function loader({request, params}) {
         const resData = await response.json();
         return resData.user;
     }
+
+}
+
+export async function action({request}) {
+    const data = await request.formData();
+    const userId = data.get('userId');
+    const url = 'http://localhost:8080/admin/user/' + userId;
+    const token = getAuthToken();
+
+
+    const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Authorization':'bearer ' + token
+        },
+        body: data
+    });
+
+    if(response.status === 422){
+        return response;
+    }
+
+    if(!response.ok) {
+        throw Response.json({
+            message: 'Could not update user'
+        }, {
+            status: 500
+        })
+    }
+
+    return redirect("/admin/users")
 
 }

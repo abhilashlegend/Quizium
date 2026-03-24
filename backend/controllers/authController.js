@@ -90,32 +90,39 @@ exports.signin = (req, res, next) => {
     })
 }
 
-exports.verifyRefreshToken = (req, res, next) => {
-    const refreshToken = req.body.refreshToken;
-    const jwtkey = process.env.JWT_SECRET;
-
-    if(!refreshToken){
-        const error = new Error("No refresh token");
-        error.statusCode = 401;
-        throw error;
-    }
-
+exports.verifyRefreshToken = async (req, res, next) => {
     try {
-        jwt.verify(refreshToken, jwtkey, (err, decoded) => {
-            if(err){
-                const err = new Error("Invalid refresh token");
-                err.statusCode = 403;
-                throw error;
-            }
+        const refreshToken = req.body.refreshToken;
+        const jwtkey = process.env.JWT_SECRET;
 
-            const newAccessToken = jwt.sign({
-                userId: decoded.userId
-            }, jwtkey, { expiresIn: '1h' })
-        });
+        if (!refreshToken) {
+            const error = new Error("No refresh token");
+            error.statusCode = 401;
+            throw error;
+        }
 
-        res.json({ accessToken: newAccessToken })
+        const decoded = jwt.verify(refreshToken, jwtkey);
+        
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            const error = new Error("User not found");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        const newAccessToken = jwt.sign({
+            email: user.email,
+            role: user.role,
+            userId: user._id.toString()
+        }, jwtkey, { expiresIn: '1h' });
+
+        res.status(200).json({ accessToken: newAccessToken });
 
     } catch(err) {
+        if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
+            err.statusCode = 403;
+            err.message = "Invalid refresh token";
+        }
         if(!err.statusCode){
             err.statusCode = 500;
         }

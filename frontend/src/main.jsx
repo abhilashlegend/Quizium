@@ -16,7 +16,7 @@ import Profile, { action as profileUpdateAction } from './routes/Profile.jsx';
 import Settings, { action as passwordUpdateAction } from './routes/Settings.jsx';
 import AdminRoute from './routes/admin/AdminRoute.jsx';
 import Users, { loader as usersLoader } from './routes/admin/Users.jsx';
-import EditUser, { loader as userDetailLoader } from './routes/admin/EditUser.jsx';
+import EditUser, { loader as userDetailLoader, action as updateUserAction } from './routes/admin/EditUser.jsx';
 
 
 const router = createBrowserRouter([
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         <AdminRoute>
           <EditUser />
         </AdminRoute>
-      ), loader: userDetailLoader,
+      ), loader: userDetailLoader, action: updateUserAction
     }
   ]}
 ])

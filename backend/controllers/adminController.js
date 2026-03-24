@@ -1,5 +1,9 @@
 const User = require("../models/user");
 const mongoose = require("mongoose");
+const { validationResult } = require('express-validator');
+const fs = require('fs');
+const path = require('path');
+const bcrypt = require('bcryptjs');
 
 exports.getAllUsers = async (req, res, next) => {
     const currentPage = req.query.page || 1;
@@ -57,4 +61,65 @@ exports.getUser = async (req, res, next) => {
         }
         next(err);
     }
+}
+
+exports.updateUser = async (req, res, next) => {
+    const userId = req.params.userId;
+    const errors = validationResult(req);
+
+    console.log(req.body);
+
+    if(!errors.isEmpty()){
+        const error = new Error("Validation failed, entered data is incorrect.");
+        error.statusCode = 422;
+        throw error;
+    }
+
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const password = req.body.password;
+
+    try {
+        const user = await User.findById(userId);
+
+        if(!user){
+            const error = new Error("Could not find user");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        if(req.file){
+            const newPicture = req.file.path.replace(/\\/g, "/");
+            if(user.picture && user.picture !== newPicture){
+                clearImage(user.picture);
+            }
+            user.picture = newPicture;
+        }
+
+        if(password && password.trim() !== ''){
+            const hashedPwd = await bcrypt.hash(password, 12);
+            user.password = hashedPwd;
+        }
+
+        
+
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.email = email;
+      
+        const result = await user.save();
+        res.status(200).json({message:'user has been updated', user: result, })
+
+    } catch(err) {
+        if(!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+const clearImage = filePath => {
+    filePath = path.join(__dirname, '..', filePath);
+    fs.unlink(filePath, err => console.log(err));
 }

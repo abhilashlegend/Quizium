@@ -61,10 +61,12 @@ export function startTokenRefresh() {
 
         if(!refreshToken) return;
 
-        const res = await fetch('http://localhost:8080/refresh-token', {
+        const res = await fetch('http://localhost:8080/auth/refresh-token', {
             method: 'POST',
             body: JSON.stringify({ refreshToken }),
-            headers: {'Content-Type':'application/json'}
+            headers: {
+                'Content-Type':'application/json'
+            }
         });
 
         if(res.ok){
