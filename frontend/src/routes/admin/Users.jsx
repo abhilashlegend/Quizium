@@ -3,9 +3,17 @@ import { getAuthToken } from '../../util/auth';
 import { useLoaderData, Await, Link } from 'react-router-dom';
 import { Suspense } from 'react';
 import { Pencil, Trash2Fill } from 'react-bootstrap-icons';
+import { API_URL } from '../../config';
 
 export default function Users() {
     const { users } = useLoaderData();
+
+    async function deleteUserHandler(userId) {
+        const token = getAuthToken();
+        const url = API_URL + 'admin/delete-user/' + userId;
+        console.log(url)
+        
+    }
     
     return (
         <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading users...</p>}>
@@ -33,7 +41,7 @@ export default function Users() {
                                             <td>{user.email}</td>
                                             <td>
                                                 <Link to={`/admin/edit-user/${user._id}`} className='btn btn-success action-btn me-2'><Pencil size={14} className='me-1 action-icon' /> Edit</Link>
-                                                <Button className='btn btn-danger action-btn'><Trash2Fill size={14} className='me-1 action-icon' /> Delete</Button>
+                                                <Button className='btn btn-danger action-btn' onClick={() => deleteUserHandler(user._id)}><Trash2Fill size={14} className='me-1 action-icon' /> Delete</Button>
                                             </td>
                                         </tr>
                                     ))}
