@@ -27,4 +27,6 @@ router.patch('/user/:userId', [ body('firstName').trim().notEmpty().withMessage(
     })
  ], isAuth, isAdmin, adminController.updateUser);
 
+router.delete('/delete-user/:userId', isAuth, isAdmin, adminController.deleteUser); 
+
 module.exports = router;

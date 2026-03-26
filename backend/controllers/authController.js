@@ -60,6 +60,11 @@ exports.signin = (req, res, next) => {
             error.statusCode = 401;
             throw error;
         }
+        if(user.active === false){
+            const error = new Error('Your account has been blocked. Please contact Admin.');
+            error.statusCode = 403;
+            throw error;
+        }
         loadedUser = user;
         return bcrypt.compare(password, user.password);
     }).then(isEqual => {

@@ -1,17 +1,33 @@
 import { Button, Table } from 'react-bootstrap';
 import { getAuthToken } from '../../util/auth';
-import { useLoaderData, Await, Link } from 'react-router-dom';
-import { Suspense } from 'react';
+import { useLoaderData, Await, Link, redirect } from 'react-router-dom';
+import { Suspense, useState, useEffect } from 'react';
 import { Pencil, Trash2Fill } from 'react-bootstrap-icons';
 import { API_URL } from '../../config';
 
 export default function Users() {
     const { users } = useLoaderData();
+    const [message, setMessage] = useState('');
 
     async function deleteUserHandler(userId) {
         const token = getAuthToken();
         const url = API_URL + 'admin/delete-user/' + userId;
-        console.log(url)
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization' : 'bearer ' + token
+            }
+        })
+
+        if(!response.ok){
+                setMessage('Failed to delete user');
+             throw new Response(JSON.stringify({message: 'Could not delete user.'}), { status: 500, headers: { 'Content-Type': 'application/json' }});
+             return
+        }
+
+        setMessage('User deleted successfully');
+
+        redirect("/admin/users")
         
     }
     
@@ -20,6 +36,11 @@ export default function Users() {
             <div className="container px-4 py-5 cbg" id="users">
                 <h2 className="pb-2 border-bottom">Users</h2>
                 <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
+                    { message && ( 
+                        <div className='alert alert-success'>
+                            { message }
+                        </div>
+                    )}
                     <Await resolve={users}>
                         {(resolvedUsers) => (
                             <Table bordered hover>

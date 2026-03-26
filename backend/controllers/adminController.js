@@ -119,6 +119,28 @@ exports.updateUser = async (req, res, next) => {
     }
 }
 
+exports.deleteUser = (req, res, next) => {
+    const userId = req.params.userId;
+
+    User.findById(userId).then(user => {
+        if(!user){
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        clearImage(user.picture);
+        return User.findByIdAndDelete(userId);
+    }).then(result => {
+        res.status(200).json({ message: 'user has been deleted' })
+    }).catch(error => {
+        if(!error.statusCode){
+            error.statusCode = 500;
+        }
+        next(error);
+    })
+}
+
 const clearImage = filePath => {
     filePath = path.join(__dirname, '..', filePath);
     fs.unlink(filePath, err => console.log(err));
