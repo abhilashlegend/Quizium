@@ -2,7 +2,7 @@ import { Button, Table } from 'react-bootstrap';
 import { getAuthToken } from '../../util/auth';
 import { useLoaderData, Await, Link, redirect } from 'react-router-dom';
 import { Suspense, useState, useEffect } from 'react';
-import { Pencil, Trash2Fill } from 'react-bootstrap-icons';
+import { Pencil, Trash2Fill, Plus } from 'react-bootstrap-icons';
 import { API_URL } from '../../config';
 
 export default function Users() {
@@ -34,8 +34,18 @@ export default function Users() {
     return (
         <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading users...</p>}>
             <div className="container px-4 py-5 cbg" id="users">
-                <h2 className="pb-2 border-bottom">Users</h2>
-                <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
+                <div className='row border-bottom'>
+                    <div className='col-md-6'>
+                        <h2 className="pb-2 ">Users</h2>
+                    </div>
+                    <div className='col-md-6'>
+                        <div className='d-flex justify-content-end'>
+                            <Link to={`/admin/new-user/`} className='btn btn-success me-2'><Plus size={14} className='me-1' /> New User</Link>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="row g-4 py-3 row-cols-1 row-cols-lg-3">
                     { message && ( 
                         <div className='alert alert-success'>
                             { message }
