@@ -1,8 +1,12 @@
-import { useNavigate, Form } from "react-router-dom";
+import { useNavigate, Form, useNavigation, redirect } from "react-router-dom";
+import { getAuthToken } from "../../util/auth";
+import { API_URL } from "../../config";
 
 export default function NewUser(props){
 
     const navigate = useNavigate();
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === 'submitting';
 
     function handleCancel() {
         navigate('/admin/users')
@@ -47,7 +51,7 @@ export default function NewUser(props){
                             
                         <div className="form-outline mb-4">
                             
-                            <button type='submit' className='main-button me-2'>Submit</button>
+                            <button type='submit' className='main-button me-2' disabled={isSubmitting}>{ isSubmitting ? 'Submitting...' : 'Submit' }</button>
                             <button type="button" onClick={handleCancel} className="secondary-button">Cancel</button>
                         </div>
                     </div>
@@ -55,4 +59,29 @@ export default function NewUser(props){
             </Form>
         </div>
     )
+}
+
+export async function action({request}) {
+    const formData = await request.formData();
+    const token = getAuthToken();
+
+    const url = API_URL + 'admin/add-user';
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization' : 'bearer ' + token
+        },
+        body: formData
+    });
+
+    if(response.status === 422 || response.status === 401){
+        return response;
+    }
+
+    if(!response.ok){
+        return new Response(JSON.stringify({message: 'Could not add user'}), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    }
+
+    return redirect("/admin/users")
+
 }

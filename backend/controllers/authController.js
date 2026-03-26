@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res, next) => {
+    
     try {
         const errors = validationResult(req);
         if(!errors.isEmpty()){
@@ -31,7 +32,12 @@ exports.signup = async (req, res, next) => {
 
         const result = await user.save();
 
-        res.status(201).json({ message: 'signup successfull!', userId: result._id.toString() });
+        let successMessage = 'signup successfull!'
+        if(req.user.role === 'admin'){
+            successMessage = "user has been added!"
+        }
+
+        res.status(201).json({ message: successMessage, userId: result._id.toString() });
     } catch (err) {
         if(!err.statusCode) {
             err.statusCode = 500;
