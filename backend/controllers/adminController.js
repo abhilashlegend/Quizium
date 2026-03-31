@@ -128,8 +128,10 @@ exports.deleteUser = (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-
-        clearImage(user.picture);
+        if(user.picture){
+            clearImage(user.picture);
+        }
+        
         return User.findByIdAndDelete(userId);
     }).then(result => {
         res.status(200).json({ message: 'user has been deleted' })

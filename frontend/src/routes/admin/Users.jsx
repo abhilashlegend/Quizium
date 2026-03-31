@@ -1,6 +1,6 @@
 import { Button, Table } from 'react-bootstrap';
 import { getAuthToken } from '../../util/auth';
-import { useLoaderData, Await, Link, redirect } from 'react-router-dom';
+import { useLoaderData, Await, Link, redirect, useSearchParams } from 'react-router-dom';
 import { Suspense, useState, useEffect } from 'react';
 import { Pencil, Trash2Fill, Plus } from 'react-bootstrap-icons';
 import { API_URL } from '../../config';
@@ -8,6 +8,11 @@ import { API_URL } from '../../config';
 export default function Users() {
     const { users } = useLoaderData();
     const [message, setMessage] = useState('');
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        setMessage(searchParams.get("message"));
+    }, [searchParams])
 
     async function deleteUserHandler(userId) {
         const token = getAuthToken();
@@ -47,10 +52,11 @@ export default function Users() {
                 
                 <div className="row g-4 py-3 row-cols-1 row-cols-lg-3">
                     { message && ( 
-                        <div className='alert alert-success'>
+                        <div className='alert alert-success text-center'>
                             { message }
                         </div>
                     )}
+                    
                     <Await resolve={users}>
                         {(resolvedUsers) => (
                             <Table bordered hover>

@@ -82,6 +82,10 @@ export async function action({request}) {
         return new Response(JSON.stringify({message: 'Could not add user'}), { status: 500, headers: { 'Content-Type': 'application/json' } })
     }
 
-    return redirect("/admin/users")
+    const resData = response.json();
+
+    console.log(resData);
+
+    return redirect("/admin/users?message=" + resData.message);
 
 }

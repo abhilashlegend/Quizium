@@ -122,6 +122,8 @@ export async function action({request}) {
         })
     }
 
-    return redirect("/admin/users")
+    const resData = await response.json();
+
+    return redirect("/admin/users?message=" + resData.message)
 
 }
