@@ -13,7 +13,7 @@ export default function Header() {
                 <Container className="position-relative">
                     { role === "admin" && <Nav className="me-auto admin-menu">
                         <Nav.Link to='/admin/users' as={Link}>Users</Nav.Link>
-                        <Nav.Link href="#features">Quizes</Nav.Link>
+                        <Nav.Link to='/admin/quizzes' as={Link}>Quizzes</Nav.Link>
                         <Nav.Link href="#pricing">Results</Nav.Link>
                     </Nav> }
                     

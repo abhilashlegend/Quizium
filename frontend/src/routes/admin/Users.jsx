@@ -1,4 +1,4 @@
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Spinner } from 'react-bootstrap';
 import { getAuthToken } from '../../util/auth';
 import { useLoaderData, Await, Link, redirect, useSearchParams } from 'react-router-dom';
 import { Suspense, useState, useEffect } from 'react';
@@ -37,7 +37,13 @@ export default function Users() {
     }
     
     return (
-        <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading users...</p>}>
+        <Suspense fallback={
+            <div className="d-flex justify-content-center align-items-center">
+                <Spinner animation="border" role="status">
+                    <span className='visually-hidden'>Loading users...</span>
+                </Spinner>
+            </div>
+        }>
             <div className="container px-4 py-5 cbg" id="users">
                 <div className='row border-bottom'>
                     <div className='col-md-6'>
