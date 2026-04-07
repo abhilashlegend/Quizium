@@ -84,8 +84,6 @@ export async function action({request}) {
 
     const resData = response.json();
 
-    console.log(resData);
-
     return redirect("/admin/users?message=" + resData.message);
 
 }

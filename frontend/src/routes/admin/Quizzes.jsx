@@ -1,17 +1,24 @@
-import { Suspense, useState } from 'react';
-import { Await, Link, redirect, useLoaderData } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
+import { Suspense, useState, useEffect } from 'react';
+import { Await, Link, redirect, useLoaderData, useSearchParams } from 'react-router-dom';
+import { Spinner, Table, Button } from 'react-bootstrap';
 import { Pencil, Trash2Fill, Plus } from 'react-bootstrap-icons';
 import { API_URL } from '../../config';
 import { getAuthToken } from '../../util/auth';
 
 export default function Quizzes() {
-    const [message, setMessage] = useState(null);
+
     const { quizzes } = useLoaderData();
 
-    async function deleteUserHandler(userId) {
+    const [message, setMessage] = useState('');
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        setMessage(searchParams.get("message"));
+    }, [searchParams])
+
+    async function deleteQuizHandler(quizId) {
             const token = getAuthToken();
-            const url = API_URL + 'admin/delete-user/' + userId;
+            const url = API_URL + 'admin/delete-quiz/' + quizId;
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -20,14 +27,14 @@ export default function Quizzes() {
             })
     
             if(!response.ok){
-                    setMessage('Failed to delete user');
-                 throw new Response(JSON.stringify({message: 'Could not delete user.'}), { status: 500, headers: { 'Content-Type': 'application/json' }});
+                    setMessage('Failed to delete quiz');
+                 throw new Response(JSON.stringify({message: 'Could not delete quiz.'}), { status: 500, headers: { 'Content-Type': 'application/json' }});
                  return
             }
     
-            setMessage('User deleted successfully');
+            setMessage('quiz deleted successfully');
     
-            redirect("/admin/users")
+            redirect("/admin/quizzes")
             
     }
 
@@ -59,7 +66,8 @@ export default function Quizzes() {
                                 )}
                                 
                                 <Await resolve={quizzes}>
-                                    {(resolvedQuizzes) => (
+                                    
+                                    {(resolvedQuizzes) => resolvedQuizzes && resolvedQuizzes.length > 0 ? (
                                         <Table bordered hover>
                                             <thead>
                                                 <tr>
@@ -77,22 +85,26 @@ export default function Quizzes() {
                                                         <td>{quiz.description}</td>
                                                         <td>
                                                             <Link to={`/admin/edit-quiz/${quiz._id}`} className='btn btn-success action-btn me-2'><Pencil size={14} className='me-1 action-icon' /> Edit</Link>
-                                                            <Button className='btn btn-danger action-btn' onClick={() => deleteQuizHandler(user._id)}><Trash2Fill size={14} className='me-1 action-icon' /> Delete</Button>
+                                                            <Button className='btn btn-danger action-btn' onClick={() => deleteQuizHandler(quiz._id)}><Trash2Fill size={14} className='me-1 action-icon' /> Delete</Button>
                                                         </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </Table>
+                                    ) : (
+                                        <p className='text-center w-100'>No quizzes found</p>
                                     )}
                                 </Await>
+                                
+                                
                             </div>
                       </div>
         </Suspense>
     )
 }
 
-export async function loader() {
 
+async function getQuizzes() {
     const token = getAuthToken();
 
     const url = API_URL + 'admin/quizzes';
@@ -108,7 +120,13 @@ export async function loader() {
         throw new Response(JSON.stringify({message: 'Could not fetch quizzes'}), { status: 500, headers: { 'Content-Type': 'application/json' }})
     }
 
-    const resData = response.json();
+    const resData = await response.json();
 
     return resData.quizzes;
+}
+
+export function loader() {
+    return {
+        quizzes: getQuizzes()
+    }
 }

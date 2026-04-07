@@ -4,6 +4,7 @@ const isAuth = require('../middleware/is-auth');
 const isAdmin = require('../middleware/is-admin');
 const adminController = require("../controllers/adminController");
 const authController = require("../controllers/authController");
+const adminQuizController = require("../controllers/adminQuizController");
 const { body } = require('express-validator');
 const User = require('../models/user');
 
@@ -47,5 +48,11 @@ router.post('/add-user/',  [
         return true;
     })
  ], isAuth, isAdmin, authController.signup);
+
+ router.get('/quizzes', isAuth, isAdmin, adminQuizController.getQuizzes);
+
+ router.post('/add-quiz/', [
+    body('title').trim().notEmpty().withMessage('Please enter title')
+ ], isAuth, isAdmin, adminQuizController.addQuiz);
 
 module.exports = router;

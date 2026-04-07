@@ -19,6 +19,7 @@ import Users, { loader as usersLoader } from './routes/admin/Users.jsx';
 import EditUser, { loader as userDetailLoader, action as updateUserAction } from './routes/admin/EditUser.jsx';
 import NewUser, { action as addUserAction } from './routes/admin/NewUser.jsx';
 import Quizzes, { loader as quizzesLoader } from './routes/admin/Quizzes.jsx';
+import NewQuiz, { action as addQuizAction } from './routes/admin/NewQuiz.jsx';
 
 
 const router = createBrowserRouter([
@@ -60,6 +61,14 @@ const router = createBrowserRouter([
           <Quizzes />
         </AdminRoute>
       ), loader: quizzesLoader
+    },
+    {
+      path: '/admin/new-quiz/',
+      element: (
+        <AdminRoute>
+          <NewQuiz />
+        </AdminRoute>
+      ), action: addQuizAction
     }
   ]}
 ])
