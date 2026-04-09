@@ -65,22 +65,23 @@ exports.getUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
     const userId = req.params.userId;
-    const errors = validationResult(req);
 
-    console.log(req.body);
-
-    if(!errors.isEmpty()){
-        const error = new Error("Validation failed, entered data is incorrect.");
-        error.statusCode = 422;
-        throw error;
-    }
-
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const password = req.body.password;
 
     try {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+            const error = new Error("Validation failed, entered data is incorrect.");
+            error.statusCode = 422;
+            error.data = errors.array();
+            throw error;
+        }
+
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const email = req.body.email;
+        const password = req.body.password;
+
         const user = await User.findById(userId);
 
         if(!user){
@@ -109,7 +110,7 @@ exports.updateUser = async (req, res, next) => {
         user.email = email;
       
         const result = await user.save();
-        res.status(200).json({message:'user has been updated', user: result, })
+        res.status(200).json({message:'user has been updated', user: result })
 
     } catch(err) {
         if(!err.statusCode) {

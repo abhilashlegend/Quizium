@@ -1,5 +1,5 @@
 import { Suspense, useState, useEffect } from 'react';
-import { Await, Link, redirect, useLoaderData, useSearchParams } from 'react-router-dom';
+import { Await, Link, useNavigate, useLoaderData, useSearchParams } from 'react-router-dom';
 import { Spinner, Table, Button } from 'react-bootstrap';
 import { Pencil, Trash2Fill, Plus } from 'react-bootstrap-icons';
 import { API_URL } from '../../config';
@@ -11,6 +11,7 @@ export default function Quizzes() {
 
     const [message, setMessage] = useState('');
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setMessage(searchParams.get("message"));
@@ -32,9 +33,7 @@ export default function Quizzes() {
                  return
             }
     
-            setMessage('quiz deleted successfully');
-    
-            redirect("/admin/quizzes")
+            navigate("/admin/quizzes?message=Quiz deleted successfully", { replace: true });
             
     }
 
@@ -58,7 +57,7 @@ export default function Quizzes() {
                                 </div>
                             </div>
                             
-                            <div className="row g-4 py-3 row-cols-1 row-cols-lg-3">
+                            <div className="row g-4 py-3 row-cols-1 row-cols-lg-12">
                                 { message && ( 
                                     <div className='alert alert-success text-center'>
                                         { message }

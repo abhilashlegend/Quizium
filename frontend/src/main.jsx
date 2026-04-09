@@ -20,6 +20,7 @@ import EditUser, { loader as userDetailLoader, action as updateUserAction } from
 import NewUser, { action as addUserAction } from './routes/admin/NewUser.jsx';
 import Quizzes, { loader as quizzesLoader } from './routes/admin/Quizzes.jsx';
 import NewQuiz, { action as addQuizAction } from './routes/admin/NewQuiz.jsx';
+import EditQuiz, { loader as quizLoader, action as editQuizAction } from './routes/admin/EditQuiz.jsx';
 
 
 const router = createBrowserRouter([
@@ -69,6 +70,14 @@ const router = createBrowserRouter([
           <NewQuiz />
         </AdminRoute>
       ), action: addQuizAction
+    }, 
+    {
+      path: '/admin/edit-quiz/:id',
+      element: (
+        <AdminRoute>
+          <EditQuiz />
+        </AdminRoute>
+      ), loader: quizLoader, action: editQuizAction
     }
   ]}
 ])

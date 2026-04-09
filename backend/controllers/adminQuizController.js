@@ -62,3 +62,105 @@ exports.addQuiz = async (req, res, next) => {
         next(err);
     }
 }
+
+exports.deleteQuiz = async (req, res, next) => {
+    try {
+        const quizId = req.params.quizId;
+
+        // Find quiz
+        const quiz = await Quiz.findById(quizId);
+
+        if(!quiz){
+            const error = new Error("Quiz not found");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        if(quiz.createdBy.toString() !== req.user.userId.toString() && req.user.role !== 'admin') {
+            const error = new Error("You are not authorized to delete this quiz");
+            error.statusCode = 403;
+            throw error;
+        }
+
+        // Delete Quiz
+        await Quiz.findByIdAndDelete(quizId);
+
+        // Todo: Delete related questions
+
+        res.status(200).json({ message: 'Quiz deleted successfully' });
+    } catch(err) {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+exports.getQuiz = async (req, res, next) => {
+    const quizId = req.params.quizId;
+
+    try {
+        const quiz = await Quiz.findById(quizId);
+
+         if(!quiz){
+            const error = new Error("Quiz not found");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        if(quiz.createdBy.toString() !== req.user.userId.toString() && req.user.role !== 'admin') {
+            const error = new Error("You are not authorized to delete this quiz");
+            error.statusCode = 403;
+            throw error;
+        }
+
+        res.status(200).json({
+            message: 'Fetched quiz successfully',
+            quiz: quiz
+        });
+
+    } catch(err) {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err)
+    }
+}
+
+exports.updateQuiz = async (req, res, next) => {
+    const quizId = req.params.quizId;
+
+
+     try {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+            const error = new Error("Validation failed, entered data is incorrect.");
+            error.statusCode = 422;
+            error.data = errors.array();
+            throw error;
+        }
+
+        const title = req.body.title;
+        const description = req.body.description;
+
+        const quiz = await Quiz.findById(quizId);
+
+        if(!quiz){
+            const error = new Error("Quiz not found");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        quiz.title = title;
+        quiz.description = description;
+        const result = await quiz.save();
+        res.status(200).json({message:'quiz has been updated', quiz: result })
+
+     } catch(err){
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+     }
+}

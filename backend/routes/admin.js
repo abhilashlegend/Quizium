@@ -55,4 +55,12 @@ router.post('/add-user/',  [
     body('title').trim().notEmpty().withMessage('Please enter title')
  ], isAuth, isAdmin, adminQuizController.addQuiz);
 
+ router.delete('/delete-quiz/:quizId', isAuth, isAdmin, adminQuizController.deleteQuiz);
+
+ router.get('/quiz/:quizId', isAuth, isAdmin, adminQuizController.getQuiz);
+
+ router.patch('/quiz/:quizId', [
+    body('title').trim().notEmpty().withMessage('Please enter title')
+  ], isAuth, isAdmin, adminQuizController.updateQuiz);
+
 module.exports = router;

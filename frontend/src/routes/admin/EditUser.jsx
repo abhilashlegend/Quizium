@@ -1,6 +1,7 @@
 import { Form, useNavigate, useLoaderData, redirect } from "react-router-dom";
 import { getAuthToken } from "../../util/auth";
 import DefaultProfilePicture  from '../../assets/307ce493-b254-4b2d-8ba4-d12c080d6651.jpg';
+import { API_URL } from '../../config';
 
 export default function EditUser() {
     const userId = localStorage.getItem('userId');
@@ -76,7 +77,9 @@ export async function loader({request, params}) {
     const userId = params.id;
     const token = getAuthToken();
 
-    const response = await fetch('http://localhost:8080/admin/user/' + userId, {
+    const url = API_URL + 'admin/user/' + userId;
+
+    const response = await fetch(url, {
         headers: {
         'Authorization': 'bearer ' + token
         }
@@ -98,7 +101,7 @@ export async function loader({request, params}) {
 export async function action({request}) {
     const data = await request.formData();
     const userId = data.get('userId');
-    const url = 'http://localhost:8080/admin/user/' + userId;
+    const url =   API_URL + 'admin/user/' + userId;
     const token = getAuthToken();
 
 
