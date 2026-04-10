@@ -619,6 +619,7 @@ header h1 {
 
 .nav-menu { background: #FFF; padding: 8px 20px; border-radius: 20px; }
 .admin-menu { background-color: #FFF; padding:0 2rem; border-radius: 20px; }
-.action-btn { border-radius: 20px; width:100px; font-size: 14px;  }
+.action-btn, .action-btn-md { border-radius: 20px; width:100px; font-size: 14px;  }
+.action-btn-md { width: 120px }
 .action-icon { position: relative; margin-top:-6px; }
 

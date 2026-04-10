@@ -1,7 +1,7 @@
 import { Suspense, useState, useEffect } from 'react';
 import { Await, Link, useNavigate, useLoaderData, useSearchParams } from 'react-router-dom';
 import { Spinner, Table, Button } from 'react-bootstrap';
-import { Pencil, Trash2Fill, Plus } from 'react-bootstrap-icons';
+import { Pencil, Trash2Fill, Plus, QuestionDiamond } from 'react-bootstrap-icons';
 import { API_URL } from '../../config';
 import { getAuthToken } from '../../util/auth';
 
@@ -85,6 +85,7 @@ export default function Quizzes() {
                                                         <td>
                                                             <Link to={`/admin/edit-quiz/${quiz._id}`} className='btn btn-success action-btn me-2'><Pencil size={14} className='me-1 action-icon' /> Edit</Link>
                                                             <Button className='btn btn-danger action-btn' onClick={() => deleteQuizHandler(quiz._id)}><Trash2Fill size={14} className='me-1 action-icon' /> Delete</Button>
+                                                            <Link to={`/admin/quizzes/${quiz._id}/questions`} className='btn btn-primary action-btn-md ms-2'><QuestionDiamond size={14} className='me-1 action-icon' /> Questions</Link>
                                                         </td>
                                                     </tr>
                                                 ))}
