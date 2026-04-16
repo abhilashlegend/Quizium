@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       ), loader: quizzesLoader 
     },
     {
-      path: '/admin/quizzes/:id/questions',
+      path: '/admin/quizzes/:quizId/questions',
         element: (
           <AdminRoute>
             <Questions />

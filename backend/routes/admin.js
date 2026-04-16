@@ -5,6 +5,7 @@ const isAdmin = require('../middleware/is-admin');
 const adminController = require("../controllers/adminController");
 const authController = require("../controllers/authController");
 const adminQuizController = require("../controllers/adminQuizController");
+const adminQuizQuestionController = require("../controllers/adminQuizQuestionController");
 const { body } = require('express-validator');
 const User = require('../models/user');
 
@@ -62,5 +63,13 @@ router.post('/add-user/',  [
  router.patch('/quiz/:quizId', [
     body('title').trim().notEmpty().withMessage('Please enter title')
   ], isAuth, isAdmin, adminQuizController.updateQuiz);
+
+router.post('/quizzes/:quizId/questions', [
+    body('question').trim().notEmpty().withMessage('Please enter question'),
+    body('options').isArray({min: 2}).withMessage("Please enter all options"),
+    body('options.*').isString().trim().notEmpty().withMessage('Each option must be a non-empty string'),
+    body('correctAnswer').trim().notEmpty().withMessage("Please choose correct Answer")
+], isAuth, isAdmin, adminQuizQuestionController.addQuestion );
+  
 
 module.exports = router;
