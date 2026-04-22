@@ -30,7 +30,6 @@ export default function Quizzes() {
             if(!response.ok){
                     setMessage('Failed to delete quiz');
                  throw new Response(JSON.stringify({message: 'Could not delete quiz.'}), { status: 500, headers: { 'Content-Type': 'application/json' }});
-                 return
             }
     
             navigate("/admin/quizzes?message=Quiz deleted successfully", { replace: true });

@@ -70,6 +70,8 @@ router.post('/quizzes/:quizId/questions', [
     body('options.*').isString().trim().notEmpty().withMessage('Each option must be a non-empty string'),
     body('correctAnswer').trim().notEmpty().withMessage("Please choose correct Answer")
 ], isAuth, isAdmin, adminQuizQuestionController.addQuestion );
+
+router.get('/quizzes/:quizId/questions', isAuth, isAdmin, adminQuizQuestionController.getQuestions);
   
 
 module.exports = router;

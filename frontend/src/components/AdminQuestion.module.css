@@ -1,0 +1,7 @@
+.question { font-weight: bold; font-size: 18px;  }
+.options { list-style: none; display: flex; flex-direction: column; padding-left:0; }
+.option, .correct-option { border:2px solid rgb(255, 193, 0); padding: 0.4rem 0; display: inline-block; align-self: flex-start; padding-right: 1rem; margin: 0.5rem 0; }
+.opt-sl, .correct-sl { padding: 0.6rem 1rem; background-color: rgb(255, 193, 0); font-weight:bold; margin-right:1rem; }
+
+.correct-option { border-color: #43B029 !important; }
+.correct-sl { background-color: #43B029 !important; color: #FFF; }

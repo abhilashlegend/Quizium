@@ -47,3 +47,33 @@ exports.addQuestion = async (req, res, next) => {
         next(err);
     }
 }
+
+exports.getQuestions = async (req, res, next) => {
+    const currentPage = req.query.page || 1;
+    const perPage = 10;
+    let totalItems;
+
+    try {
+        const quizId = req.params.quizId;
+        totalItems = await Question.find({quiz: quizId}).countDocuments();
+        const questions = await Question.find({quiz: quizId}).skip((currentPage - 1) * perPage).limit(perPage);
+
+        if(!questions){
+            const error = new Error("Could not get questions");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        res.status(200).json({
+            message: 'Fetched questions successfully!',
+            questions: questions,
+            totalItems: totalItems
+        });
+
+    } catch(err) {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
