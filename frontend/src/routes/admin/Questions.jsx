@@ -1,9 +1,9 @@
 import { Button, Modal, Spinner } from 'react-bootstrap';
 import { Plus } from 'react-bootstrap-icons';
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import { getAuthToken } from '../../util/auth';
 import { API_URL } from '../../config';
-import { useParams, useLoaderData, Await } from 'react-router-dom';
+import { useParams, useLoaderData, Await, useSearchParams } from 'react-router-dom'; // useEffect is from 'react', not 'react-router-dom'
 import AdminQuestion from '../../components/AdminQuestion';
 import AdminAddEditQuestionModal from '../../components/AdminAddEditQuestionModal';
 
@@ -11,20 +11,26 @@ import AdminAddEditQuestionModal from '../../components/AdminAddEditQuestionModa
 export default function Questions() {
 
     const [show, setShow] = useState(false);  
+    const [mode, setMode] = useState(null)
     const { quizId } = useParams();
     const { questions } = useLoaderData();
-    const [modalTitle, setModalTitle] = useState('');
     const [questionId, setQuestionId] = useState(null);
+
+    const [message, setMessage] = useState(''); // Declare message as a state variable
+    const [searchParams] = useSearchParams(); 
+
+    useEffect(() => { // Use useEffect to update message from search params
+        setMessage(searchParams.get("message"));
+    }, [searchParams])
 
 
     const handleClose = () => {
         setShow(false);
-        setModalTitle('');
         setQuestionId(null);
     }
 
-    const handleShow = (title, qId = null) => {
-        setModalTitle(title);
+    const handleShow = (mode, qId = null) => {
+        setMode(mode);
         setShow(true);
         setQuestionId(qId);
     }
@@ -40,7 +46,7 @@ export default function Questions() {
                     </div>
                     <div className='col-md-6'>
                         <div className='d-flex justify-content-end'>
-                            <Button className='btn btn-success me-2' onClick={() => handleShow('Add Question')}><Plus size={14} className='me-1' /> Add Question</Button>
+                            <Button className='btn btn-success me-2' onClick={() => handleShow('Add')}><Plus size={14} className='me-1' /> Add Question</Button>
                         </div>
                     </div>
                 </div>
@@ -53,11 +59,20 @@ export default function Questions() {
                         </div>
                     }>
                         <div className="container px-4 py-2 cbg" id="quizzes">
+                             { message && ( 
+                                <div className='row pb-3 border-bottom'>
+                                    <div className='col-md-12'>
+                                        <div className='alert alert-success text-center'>
+                                            { message }
+                                        </div>
+                                    </div>
+                                </div>
+                                )}
                             <Await resolve={questions}>
                                 {(resolvedQuestions) => resolvedQuestions && resolvedQuestions.length > 0 ? (
                                     <>
                                         {resolvedQuestions.map((questionData, index) => (
-                                            <AdminQuestion key={questionData._id || index} data={questionData} sl={index} editQuestionHandler={handleShow} />
+                                            <AdminQuestion key={questionData._id || index} data={questionData} sl={index} editQuestionHandler={handleShow}  />
                                          ))}
                                     </>
                                     
@@ -71,7 +86,7 @@ export default function Questions() {
                     </Suspense>
                 </div>
             </div>
-             <AdminAddEditQuestionModal show={show} handleClose={handleClose} title={modalTitle} questionId={questionId} />
+             <AdminAddEditQuestionModal show={show} handleClose={handleClose} mode={mode} questionId={questionId} />
         </>
     )
 }

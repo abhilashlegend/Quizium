@@ -72,6 +72,17 @@ router.post('/quizzes/:quizId/questions', [
 ], isAuth, isAdmin, adminQuizQuestionController.addQuestion );
 
 router.get('/quizzes/:quizId/questions', isAuth, isAdmin, adminQuizQuestionController.getQuestions);
+
+router.get('/quizzes/:quizId/questions/:questionId', isAuth, isAdmin, adminQuizQuestionController.getQuestion);
+
+router.patch('/question/:questionId', [
+    body('question').trim().notEmpty().withMessage("Please enter question"),
+    body('options').isArray({min: 2}).withMessage("Please enter all options"),
+    body('options.*').isString().trim().notEmpty().withMessage("Each option must be a non-empty string"),
+    body('correctAnswer').trim().notEmpty().withMessage("Please choose correct Answer")
+], isAuth, isAdmin, adminQuizQuestionController.updateQuestion );
+
+router.delete('/questions/:questionId', isAuth, isAdmin, adminQuizQuestionController.deleteQuestion);
   
 
 module.exports = router;
