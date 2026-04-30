@@ -60,12 +60,7 @@ export default function AdminAddEditQuestionModal({show, handleClose, questionId
         if(questionId !== null){
           getQuestion(questionId).then(result => {
             setQuestion(result[0].question);
-            setOptions({
-                A: result[0].options[0],
-                B: result[0].options[1],
-                C: result[0].options[2],
-                D: result[0].options[3]
-            });
+            setOptions([result[0].options[0], result[0].options[1], result[0].options[2], result[0].options[3]]);
             setCorrectAnswer(result[0].correctAnswer);
           }).catch(err => {
             console.log(err);
@@ -78,7 +73,7 @@ export default function AdminAddEditQuestionModal({show, handleClose, questionId
     
         const payload = {
             question: question,
-            options: [options.A, options.B, options.C, options.D],
+            options: options,
             correctAnswer
         }
     
@@ -129,7 +124,7 @@ export default function AdminAddEditQuestionModal({show, handleClose, questionId
 
             // Reset form
             setQuestion("");
-            setOptions({A: "", B: "", C: "", D: "" });
+            setOptions(["", ""]);
             setCorrectAnswer("");
             setErrors({});
             handleClose();
@@ -198,12 +193,14 @@ export default function AdminAddEditQuestionModal({show, handleClose, questionId
                                     required
                                     >
                                     <option value="">Select correct option</option>
-                                    <option value={options.A}>A</option>
-                                    <option value={options.B}>B</option>
-                                    <option value={options.C}>C</option>
-                                    <option value={options.D}>D</option>
+                                    { options.map((option, index) => {
+                                        return (
+                                            <option key={index} value={option}>{option}</option>
+                                        )
+                                        })}
+                                    
                                     </select>
-                                    {errors.correctAnswer && <small className='text-danger'>{errors["options[0]"]}</small>}
+                                    {errors.correctAnswer && <small className='text-danger'>{errors.correctAnswer}</small>}
                                 </div>
                              </div>
                             
