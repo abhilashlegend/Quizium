@@ -87,8 +87,8 @@ exports.updateQuestion = async (req, res, next) => {
 }
 
 exports.getQuestions = async (req, res, next) => {
-    const currentPage = req.query.page || 1;
-    const perPage = 10;
+    const currentPage = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.limit) || 10;
     let totalItems;
 
     try {
