@@ -94,7 +94,10 @@ exports.getQuestions = async (req, res, next) => {
     try {
         const quizId = req.params.quizId;
         totalItems = await Question.find({quiz: quizId}).countDocuments();
-        const questions = await Question.find({quiz: quizId}).skip((currentPage - 1) * perPage).limit(perPage);
+        const questions = await Question.find({quiz: quizId})
+            .sort({ createdAt: -1 })
+            .skip((currentPage - 1) * perPage)
+            .limit(perPage);
 
         if(!questions){
             const error = new Error("Could not get questions");
